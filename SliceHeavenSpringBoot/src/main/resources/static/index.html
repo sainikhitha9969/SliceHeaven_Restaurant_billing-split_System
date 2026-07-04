@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+
+<title>SliceHeaven Restaurant Billing</title>
+
+<style>
+
+body{
+    margin:0;
+    padding:0;
+    font-family:Arial;
+    background:#f2f2f2;
+}
+
+.container{
+    width:650px;
+    margin:30px auto;
+    background:white;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0px 0px 10px gray;
+}
+
+h1{
+    text-align:center;
+    color:green;
+}
+
+label{
+    font-weight:bold;
+}
+
+input,select{
+    width:100%;
+    padding:10px;
+    margin-top:8px;
+    margin-bottom:15px;
+    border-radius:5px;
+    border:1px solid gray;
+    font-size:15px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    font-size:18px;
+    background:green;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#006600;
+}
+
+</style>
+
+<script>
+
+var vegPizzas=[
+["Margherita",200],
+["Farm House",350],
+["Veg Supreme",320],
+["Paneer Pizza",300],
+["Cheese Burst",400],
+["Mexican Green Wave",380],
+["Corn Delight",250],
+["Veg Loaded",420],
+["Paneer Tikka",340],
+["Double Cheese",450]
+];
+
+var nonVegPizzas=[
+["Chicken Dominator",520],
+["Chicken Tikka",540],
+["Chicken Pepperoni",560],
+["Chicken Fiesta",500],
+["BBQ Chicken",580],
+["Chicken Supreme",620],
+["Peri Peri Chicken",600],
+["Chicken Sausage",520],
+["Spicy Chicken",550],
+["Chicken Deluxe",650]
+];
+
+function loadPizza(){
+
+    var type=document.getElementById("type").value;
+
+    var pizza=document.getElementById("pizza");
+
+    pizza.innerHTML="";
+
+    var list=[];
+
+    if(type=="Veg"){
+        list=vegPizzas;
+    }
+    else if(type=="NonVeg"){
+        list=nonVegPizzas;
+    }
+
+    for(var i=0;i<list.length;i++){
+
+        var option=document.createElement("option");
+
+        option.value=list[i][0];
+
+        option.text=list[i][0]+" - ₹"+list[i][1];
+
+        option.setAttribute("data-price",list[i][1]);
+
+        pizza.appendChild(option);
+    }
+
+    pizzaPrice();
+}
+
+function pizzaPrice(){
+
+    var pizza=document.getElementById("pizza");
+
+    if(pizza.selectedIndex==-1)
+        return;
+
+    var price=pizza.options[pizza.selectedIndex].getAttribute("data-price");
+
+    document.getElementById("pizzaPrice").value=price;
+
+}
+
+function modifierPrice(){
+
+    var modifier=document.getElementById("modifier");
+
+    var price=modifier.options[modifier.selectedIndex].getAttribute("data-price");
+
+    document.getElementById("modifierPrice").value=price;
+
+}
+
+function drinkPrice(){
+
+    var drink=document.getElementById("drink");
+
+    var price=drink.options[drink.selectedIndex].getAttribute("data-price");
+
+    document.getElementById("drinkPrice").value=price;
+
+}
+
+window.onload=function(){
+
+    modifierPrice();
+
+    drinkPrice();
+
+}
+
+</script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🍕 SliceHeaven Billing System</h1>
+
+<form action="/calculate" method="post">
+	
+	<label>Customer Name</label>
+
+<input
+type="text"
+name="customerName"
+placeholder="Enter Customer Name"
+required>
+
+<label>Phone Number</label>
+
+<input
+type="text"
+name="phone"
+placeholder="Enter Mobile Number"
+required>
+
+<label>Pizza Type</label>
+
+<select
+id="type"
+onchange="loadPizza()"
+required>
+
+<option value="">Select Pizza Type</option>
+
+<option value="Veg">Veg Pizza</option>
+
+<option value="NonVeg">Non Veg Pizza</option>
+
+</select>
+
+<label>Select Pizza</label>
+
+<select
+id="pizza"
+name="pizzaName"
+onchange="pizzaPrice()"
+required>
+
+<option value="">Select Pizza</option>
+
+</select>
+
+<input
+type="hidden"
+id="pizzaPrice"
+name="pizzaPrice">
+
+<label>Quantity</label>
+
+<input
+type="number"
+name="quantity"
+value="1"
+min="1"
+required>
+
+<label>Modifier</label>
+
+<select
+id="modifier"
+name="modifierName"
+onchange="modifierPrice()">
+
+<option value="None" data-price="0">No Modifier</option>
+
+<option value="Extra Cheese" data-price="50">
+Extra Cheese - ₹50
+</option>
+
+<option value="Olives" data-price="40">
+Olives - ₹40
+</option>
+
+<option value="Corn" data-price="30">
+Corn - ₹30
+</option>
+
+<option value="Mushroom" data-price="60">
+Mushroom - ₹60
+</option>
+
+<option value="Paneer" data-price="70">
+Paneer - ₹70
+</option>
+
+<option value="Jalapeno" data-price="45">
+Jalapeno - ₹45
+</option>
+
+</select>
+
+<input
+type="hidden"
+id="modifierPrice"
+name="modifierPrice">
+
+<label>Drinks</label>
+
+<select
+id="drink"
+name="drinkName"
+onchange="drinkPrice()">
+
+<option value="None" data-price="0">
+No Drink
+</option>
+
+<option value="Coke" data-price="40">
+Coke - ₹40
+</option>
+
+<option value="Pepsi" data-price="40">
+Pepsi - ₹40
+</option>
+
+<option value="Sprite" data-price="45">
+Sprite - ₹45
+</option>
+
+<option value="Fanta" data-price="40">
+Fanta - ₹40
+</option>
+
+<option value="Water Bottle" data-price="20">
+Water Bottle - ₹20
+</option>
+
+<option value="Cold Coffee" data-price="120">
+Cold Coffee - ₹120
+</option>
+
+<option value="Chocolate Milkshake" data-price="150">
+Chocolate Milkshake - ₹150
+</option>
+
+</select>
+
+<input
+type="hidden"
+id="drinkPrice"
+name="drinkPrice">
+
+<br>
+
+<button type="submit">
+Generate Bill
+</button>
+
+</form>
+
+</div>
+
+</body>
+</html>
